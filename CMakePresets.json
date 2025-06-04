@@ -6,12 +6,16 @@
       "displayName": "x64 Multi-Config",
       "description": "Builds for x64 using Ninja Multi-Config (supports both Debug and Release)",
       "generator": "Ninja Multi-Config",
-      "binaryDir": "${sourceDir}/out/build/${presetName}",
-      "installDir": "${sourceDir}/out/install/${presetName}",
+      "binaryDir": "${sourceDir}/build",
+      "installDir": "${sourceDir}/install",
       "cacheVariables": {
-        "CMAKE_TOOLCHAIN_FILE": "C:\\Users\\yeisme\\scoop\\apps\\vcpkg\\current\\scripts\\buildsystems\\vcpkg.cmake",
-        "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
-        "CMAKE_CONFIGURATION_TYPES": "Debug;Release;RelWithDebInfo;MinSizeRel"
+        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+        "CMAKE_INSTALL_PREFIX": "${sourceDir}/install/${presetName}",
+        "CMAKE_CONFIGURATION_TYPES": "Debug;Release;RelWithDebInfo;MinSizeRel",
+        "CMAKE_PREFIX_PATH": "C:/Users/yeisme/lib/opencv/build",
+        "CMAKE_C_COMPILER": "cl.exe",
+        "CMAKE_CXX_COMPILER": "cl.exe",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "YES"
       },
       "vendor": {
         "microsoft.com/VisualStudioSettings/CMake/1.0": {

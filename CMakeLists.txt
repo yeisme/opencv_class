@@ -20,7 +20,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 add_library(shared_config INTERFACE)
 
 # opencv: vcpkg install opencv4
-set(OpenCV_ROOT "${VCPKG_INSTALLED_DIR}/x64-windows/share/opencv4")
+set(OpenCV_ROOT "C:/Users/yeisme/lib/opencv")
 find_package(OpenCV REQUIRED)
 
 # 配置共享库
