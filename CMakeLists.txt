@@ -3,7 +3,7 @@
 project(class_learn)
 
 # vcpkg
-set(CMAKE_TOOLCHAIN_FILE ${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake)
+# set(CMAKE_TOOLCHAIN_FILE ${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake)
 
 # MV
 set(MVS_LIB "C:/Program Files (x86)/MVS/Development")
@@ -15,6 +15,7 @@ file(GLOB MVFG_LIBS "${MVFG_LIB}/Libraries/win64/*.lib")
 # flags
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 # 创建共享配置库
 add_library(shared_config INTERFACE)
@@ -45,3 +46,5 @@ add_subdirectory(class1)
 add_subdirectory(class2)
 add_subdirectory(class3)
 add_subdirectory(class4)
+add_subdirectory(class5)
+add_subdirectory(class6)

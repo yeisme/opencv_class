@@ -1,0 +1,11 @@
+{
+    "terminal.integrated.env.windows": {
+        "PATH": "${env:PATH};C:\\Users\\yeisme\\lib\\opencv\\build\\x64\\vc16\\bin"
+    },
+    "clangd.arguments": [
+        "--compile-commands-dir=build",
+        "--header-insertion=never",
+        "--fallback-style=Google",
+        "--clang-tidy"
+    ]
+}
