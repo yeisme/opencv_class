@@ -21,7 +21,6 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 add_library(shared_config INTERFACE)
 
 # opencv: vcpkg install opencv4
-set(OpenCV_ROOT "C:/Users/yeisme/lib/opencv")
 find_package(OpenCV REQUIRED)
 
 # 配置共享库
@@ -48,3 +47,4 @@ add_subdirectory(class3)
 add_subdirectory(class4)
 add_subdirectory(class5)
 add_subdirectory(class6)
+add_subdirectory(class7)

@@ -34,20 +34,20 @@ cv::Mat spatialLaplacianFilter(const cv::Mat &input) {
  * @param size 滤波器尺寸
  * @param radius 截止频率半径（以像素为单位）
  * @return cv::Mat 理想低通滤波器矩阵（CV_32F类型）
- * 
+ *
  * @details 理想低通滤波器工作原理：
  *          1. 频域中心点 (center.x, center.y) 代表零频率（直流分量）
  *          2. 距离中心点越远，频率越高
  *          3. 对每个频率点计算其到中心的欧几里得距离
  *          4. 距离 <= radius 的频率分量：完全通过（系数=1.0）
  *          5. 距离 > radius 的频率分量：完全阻止（系数=0.0）
- * 
+ *
  * @note 理想低通滤波器特点：
  *       - 优点：完美的频率选择性，截止频率内无衰减
  *       - 缺点：会产生振铃效应（Gibbs现象），因为频域中的尖锐截断
  *              对应空间域中的sinc函数，具有振荡特性
  *       - 应用：去除高频噪声，图像平滑，但实际中更常用高斯滤波器
- * 
+ *
  * @warning 振铃效应：在图像边缘附近会出现明显的波纹状伪影
  */
 cv::Mat createIdealLowPassFilter(cv::Size size, double radius) {
@@ -105,28 +105,29 @@ cv::Mat frequencyDomainFilter(const cv::Mat &input, const cv::Mat &filter) {
 
   /**
    * 转换到频域的关键步骤解析：
-   * 
+   *
    * 1. 创建复数表示：
-   *    - DFT需要处理复数数据：f(x,y) = real + j*imag
+   *    - DFT 需要处理复数数据：f(x,y) = real + j*imag
    *    - 实际图像只有实部，虚部为0
-   *    - OpenCV要求输入为双通道矩阵 [实部通道, 虚部通道]
+   *    - OpenCV 要求输入为双通道矩阵 [实部通道, 虚部通道]
    */
-  
+
   // 步骤1：构建复数图像的两个通道
   cv::Mat planes[] = {
-    paddedFloat,                                      // 实部：原始图像数据
-    cv::Mat::zeros(paddedFloat.size(), CV_32F)       // 虚部：全零矩阵
+      paddedFloat,                                // 实部：原始图像数据
+      cv::Mat::zeros(paddedFloat.size(), CV_32F)  // 虚部：全零矩阵
   };
-  
+
   // 步骤2：合并实部和虚部为双通道复数矩阵
   // 结果：complexI 为 CV_32FC2 类型 (32位浮点，双通道)
   // 每个像素包含 [real, imag] 两个分量
+  // cv::merge 用于将多个单通道矩阵合并成一个多通道矩阵。
   cv::Mat complexI;
   cv::merge(planes, 2, complexI);
-  
+
   /**
    * 步骤3：执行离散傅里叶变换 (DFT)
-   * 
+   *
    * 数学原理：F(u,v) = ∑∑ f(x,y) * e^(-j2π(ux/M + vy/N))
    * 其中：
    * - f(x,y): 空间域图像函数
@@ -134,12 +135,12 @@ cv::Mat frequencyDomainFilter(const cv::Mat &input, const cv::Mat &filter) {
    * - (u,v): 频域坐标
    * - (x,y): 空间域坐标
    * - M,N: 图像尺寸
-   * 
+   *
    * 物理意义：
    * - 将空间域的像素强度分解为不同频率的正弦/余弦分量
    * - 低频分量：图像的平滑区域、整体亮度
    * - 高频分量：图像的边缘、细节、纹理、噪声
-   * 
+   *
    * 结果特点：
    * - 输出仍为CV_32FC2类型的复数矩阵
    * - 实部：余弦分量的幅值
@@ -156,12 +157,14 @@ cv::Mat frequencyDomainFilter(const cv::Mat &input, const cv::Mat &filter) {
   int cx = planes[0].cols / 2;
   int cy = planes[0].rows / 2;
 
-  for (int i = 0; i < 2; i++) {  // 处理实部和虚部
-    cv::Mat q0(planes[i], cv::Rect(0, 0, cx, cy));
-    cv::Mat q1(planes[i], cv::Rect(cx, 0, cx, cy));
-    cv::Mat q2(planes[i], cv::Rect(0, cy, cx, cy));
-    cv::Mat q3(planes[i], cv::Rect(cx, cy, cx, cy));
+  for (int i = 0; i < 2; i++) {  // i=0处理实部，i=1处理虚部
+    // 将频谱分为四个象限
+    cv::Mat q0(planes[i], cv::Rect(0, 0, cx, cy));    // 左上
+    cv::Mat q1(planes[i], cv::Rect(cx, 0, cx, cy));   // 右上
+    cv::Mat q2(planes[i], cv::Rect(0, cy, cx, cy));   // 左下
+    cv::Mat q3(planes[i], cv::Rect(cx, cy, cx, cy));  // 右下
 
+    // 交换对角象限：q0<->q3, q1<->q2
     cv::Mat tmp;
     q0.copyTo(tmp);
     q3.copyTo(q0);
